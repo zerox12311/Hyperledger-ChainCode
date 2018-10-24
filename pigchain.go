@@ -164,7 +164,7 @@ func (s *SmartContract) recordPig(APIstub shim.ChaincodeStubInterface, args []st
 		return shim.Error("Incorrect number of arguments. Expecting 5")
 	}
 
-	var pig = Pig{PigId: args[0], Company: args[1], actionName: args[2], Timestamp: args[3]}
+	var pig = Pig{PigId: args[0], Company: args[1], ActionName: args[2], Timestamp: args[3]}
 
 	pigAsBytes, _ := json.Marshal(pig)
 	err := APIstub.PutState(args[0], pigAsBytes)
