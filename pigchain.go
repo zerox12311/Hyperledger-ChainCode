@@ -53,7 +53,7 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 	} else if function == "recordPig" {
 		return s.recordPig(APIstub, args)
 	} else if function == "queryPigHistory" {
-		return s.queryPigHistory(APIstub)
+		return s.queryPigHistory(APIstub, args)
 	}
 
 	return shim.Error("Invalid Smart Contract function name.")
