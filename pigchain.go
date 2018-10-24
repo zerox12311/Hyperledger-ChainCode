@@ -95,7 +95,7 @@ func (s *SmartContract) queryPigHistory(APIstub shim.ChaincodeStubInterface, arg
 	pigAsBytes, err := APIstub.GetHistoryForKey(args[0])
 	if err != nil {
 		fmt.Errorf("Failed to get asset: %s with error: %s", args[0], err)
-		return shim.Errorf("Failed to get asset: %s with error: %s", args[0], err)
+		return shim.Error("Failed to get asset")
 	}
 
 	if pigAsBytes == nil {
@@ -113,7 +113,7 @@ func (s *SmartContract) queryPigHistory(APIstub shim.ChaincodeStubInterface, arg
 		result, err2 := pigAsBytes.Next()
 		if err2 != nil {
 			fmt.Errorf("Failed to get asset: %s with error: %s", args[0], err)
-			return shim.Errorf("Failed to get asset: %s with error: %s", args[0], err)
+			return shim.Errorf("Failed to get asset")
 		}
 		// value += string(result.Value) + "||"
 		if bArrayMemberAlreadyWritten == true {
@@ -122,26 +122,26 @@ func (s *SmartContract) queryPigHistory(APIstub shim.ChaincodeStubInterface, arg
 
 		buffer.WriteString("{\"Id\":")
 		buffer.WriteString("\"")
-		buffer.WriteString(response.PigId)
+		buffer.WriteString(result.PigId)
 		buffer.WriteString("\"")
 
 		buffer.WriteString(", \"Value\":")
 
-		buffer.WriteString(string(response.Value))
+		buffer.WriteString(string(result.Value))
 
 		buffer.WriteString(", \"Timestamp\":")
 		buffer.WriteString("\"")
-		buffer.WriteString(time.Unix(response.Timestamp.Seconds, int64(response.Timestamp.Nanos)).String())
+		buffer.WriteString(time.Unix(result.Timestamp.Seconds, int64(result.Timestamp.Nanos)).String())
 		buffer.WriteString("\"")
 
 		buffer.WriteString("{\"Company\":")
 		buffer.WriteString("\"")
-		buffer.WriteString(response.Company)
+		buffer.WriteString(result.Company)
 		buffer.WriteString("\"")
 
 		buffer.WriteString("{\"ActionName\":")
 		buffer.WriteString("\"")
-		buffer.WriteString(response.ActionName)
+		buffer.WriteString(result.ActionName)
 		buffer.WriteString("\"")
 		bArrayMemberAlreadyWritten = true
 	}
