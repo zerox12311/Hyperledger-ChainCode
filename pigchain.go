@@ -108,7 +108,6 @@ func (s *SmartContract) queryPigHistory(APIstub shim.ChaincodeStubInterface, arg
 	buffer.WriteString("[")
 	bArrayMemberAlreadyWritten := false
 
-	var value string
 	for pigAsBytes.HasNext() {
 		result, err2 := pigAsBytes.Next()
 		if err2 != nil {
