@@ -119,6 +119,11 @@ func (s *SmartContract) queryPigHistory(APIstub shim.ChaincodeStubInterface, arg
 			buffer.WriteString(",")
 		}
 
+		buffer.WriteString("{\"TxId\":")
+		buffer.WriteString("\"")
+		buffer.WriteString(response.TxId)
+		buffer.WriteString("\"")
+
 		buffer.WriteString(", \"Value\":")
 
 		buffer.WriteString(string(result.Value))
@@ -128,6 +133,7 @@ func (s *SmartContract) queryPigHistory(APIstub shim.ChaincodeStubInterface, arg
 		buffer.WriteString(time.Unix(result.Timestamp.Seconds, int64(result.Timestamp.Nanos)).String())
 		buffer.WriteString("\"")
 
+		buffer.WriteString("}")
 		bArrayMemberAlreadyWritten = true
 	}
 
