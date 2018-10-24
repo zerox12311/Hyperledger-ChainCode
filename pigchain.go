@@ -2,8 +2,10 @@ package main
 
 // 引入相關套件
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	sc "github.com/hyperledger/fabric/protos/peer"
@@ -22,7 +24,7 @@ type Pig struct {
 	PigId      string `json:"pigid"`
 	Timestamp  string `json:"timestamp"`
 	Company    string `json:"company"`
-	actionName string `json:"actionname"`
+	ActionName string `json:"actionname"`
 }
 
 // 設定必須的 init 與 invoke 方法
@@ -102,6 +104,10 @@ func (s *SmartContract) queryPigHistory(APIstub shim.ChaincodeStubInterface, arg
 	}
 	defer pigAsBytes.Close()
 
+	var buffer bytes.Buffer
+	buffer.WriteString("[")
+	bArrayMemberAlreadyWritten := false
+
 	var value string
 	for pigAsBytes.HasNext() {
 		result, err2 := pigAsBytes.Next()
@@ -109,10 +115,42 @@ func (s *SmartContract) queryPigHistory(APIstub shim.ChaincodeStubInterface, arg
 			fmt.Errorf("Failed to get asset: %s with error: %s", args[0], err)
 			return shim.Error("Failed to get asset: %s with error: %s", args[0], err)
 		}
-		value += string(result.Value) + "||"
+		// value += string(result.Value) + "||"
+		if bArrayMemberAlreadyWritten == true {
+			buffer.WriteString(",")
+		}
+
+		buffer.WriteString("{\"Id\":")
+		buffer.WriteString("\"")
+		buffer.WriteString(response.PigId)
+		buffer.WriteString("\"")
+
+		buffer.WriteString(", \"Value\":")
+
+		buffer.WriteString(string(response.Value))
+
+		buffer.WriteString(", \"Timestamp\":")
+		buffer.WriteString("\"")
+		buffer.WriteString(time.Unix(response.Timestamp.Seconds, int64(response.Timestamp.Nanos)).String())
+		buffer.WriteString("\"")
+
+		buffer.WriteString("{\"Company\":")
+		buffer.WriteString("\"")
+		buffer.WriteString(response.Company)
+		buffer.WriteString("\"")
+
+		buffer.WriteString("{\"ActionName\":")
+		buffer.WriteString("\"")
+		buffer.WriteString(response.ActionName)
+		buffer.WriteString("\"")
+		bArrayMemberAlreadyWritten = true
 	}
 
-	return shim.Success(value)
+	buffer.WriteString("]")
+
+	fmt.Printf("- getHistoryForMarble returning:\n%s\n", buffer.String())
+
+	return shim.Success(nil)
 }
 
 // 增加新紀錄
