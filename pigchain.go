@@ -121,7 +121,7 @@ func (s *SmartContract) queryPigHistory(APIstub shim.ChaincodeStubInterface, arg
 
 		buffer.WriteString("{\"TxId\":")
 		buffer.WriteString("\"")
-		buffer.WriteString(response.TxId)
+		buffer.WriteString(result.TxId)
 		buffer.WriteString("\"")
 
 		buffer.WriteString(", \"Value\":")
