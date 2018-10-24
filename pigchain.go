@@ -113,17 +113,12 @@ func (s *SmartContract) queryPigHistory(APIstub shim.ChaincodeStubInterface, arg
 		result, err2 := pigAsBytes.Next()
 		if err2 != nil {
 			fmt.Errorf("Failed to get asset: %s with error: %s", args[0], err)
-			return shim.Errorf("Failed to get asset")
+			return shim.Error("Failed to get asset")
 		}
 		// value += string(result.Value) + "||"
 		if bArrayMemberAlreadyWritten == true {
 			buffer.WriteString(",")
 		}
-
-		buffer.WriteString("{\"Id\":")
-		buffer.WriteString("\"")
-		buffer.WriteString(result.PigId)
-		buffer.WriteString("\"")
 
 		buffer.WriteString(", \"Value\":")
 
@@ -134,15 +129,6 @@ func (s *SmartContract) queryPigHistory(APIstub shim.ChaincodeStubInterface, arg
 		buffer.WriteString(time.Unix(result.Timestamp.Seconds, int64(result.Timestamp.Nanos)).String())
 		buffer.WriteString("\"")
 
-		buffer.WriteString("{\"Company\":")
-		buffer.WriteString("\"")
-		buffer.WriteString(result.Company)
-		buffer.WriteString("\"")
-
-		buffer.WriteString("{\"ActionName\":")
-		buffer.WriteString("\"")
-		buffer.WriteString(result.ActionName)
-		buffer.WriteString("\"")
 		bArrayMemberAlreadyWritten = true
 	}
 
