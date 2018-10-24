@@ -135,7 +135,7 @@ func (s *SmartContract) queryPigHistory(APIstub shim.ChaincodeStubInterface, arg
 
 	fmt.Printf("- getHistoryForMarble returning:\n%s\n", buffer.String())
 
-	return shim.Success(nil)
+	return shim.Success(buffer.Bytes())
 }
 
 // 增加新紀錄
