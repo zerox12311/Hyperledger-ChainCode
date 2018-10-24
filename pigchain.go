@@ -95,7 +95,7 @@ func (s *SmartContract) queryPigHistory(APIstub shim.ChaincodeStubInterface, arg
 	pigAsBytes, err := APIstub.GetHistoryForKey(args[0])
 	if err != nil {
 		fmt.Errorf("Failed to get asset: %s with error: %s", args[0], err)
-		return shim.Error("Failed to get asset: %s with error: %s", args[0], err)
+		return shim.Errorf("Failed to get asset: %s with error: %s", args[0], err)
 	}
 
 	if pigAsBytes == nil {
@@ -113,7 +113,7 @@ func (s *SmartContract) queryPigHistory(APIstub shim.ChaincodeStubInterface, arg
 		result, err2 := pigAsBytes.Next()
 		if err2 != nil {
 			fmt.Errorf("Failed to get asset: %s with error: %s", args[0], err)
-			return shim.Error("Failed to get asset: %s with error: %s", args[0], err)
+			return shim.Errorf("Failed to get asset: %s with error: %s", args[0], err)
 		}
 		// value += string(result.Value) + "||"
 		if bArrayMemberAlreadyWritten == true {
