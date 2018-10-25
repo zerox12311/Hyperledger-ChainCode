@@ -59,7 +59,7 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.queryPigHistory(APIstub, args)
 	}
 
-	return shim.Error("Invalid Smart Contract function name.")
+	return shim.Error([]byte("Invalid Smart Contract function name."))
 }
 
 // 生成模擬資料
@@ -82,7 +82,7 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 		i = i + 1
 	}
 
-	return shim.Success(nil)
+	return shim.Success([]byte("Init Success"))
 }
 
 // 查詢單隻pig
@@ -92,30 +92,30 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 func (s *SmartContract) queryPig(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	if len(args) != 1 {
-		return shim.Error("Incorrect number of arguments. Expecting 1")
+		return shim.Error([]byte("Incorrect number of arguments. Expecting 1"))
 	}
 
 	pigAsBytes, _ := APIstub.GetState(args[0])
 	if pigAsBytes == nil {
-		return shim.Error("Could not locate pig")
+		return shim.Error([]byte("Could not locate pig"))
 	}
 	return shim.Success(pigAsBytes)
 }
 
 func (s *SmartContract) queryPigHistory(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 	if len(args) != 1 {
-		return shim.Error("Incorrect number of arguments. Expecting 1")
+		return shim.Error([]byte("Incorrect number of arguments. Expecting 1"))
 	}
 
 	pigAsBytes, err := APIstub.GetHistoryForKey(args[0])
 	if err != nil {
 		fmt.Errorf("Failed to get asset: %s with error: %s", args[0], err)
-		return shim.Error("Failed to get asset")
+		return shim.Error([]byte("Failed to get asset"))
 	}
 
 	if pigAsBytes == nil {
 		fmt.Errorf("Could not locate pig")
-		return shim.Error("Could not locate pig")
+		return shim.Error([]byte("Could not locate pig"))
 	}
 	defer pigAsBytes.Close()
 
@@ -167,7 +167,7 @@ func (s *SmartContract) queryPigHistory(APIstub shim.ChaincodeStubInterface, arg
 func (s *SmartContract) recordPig(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	if len(args) != 4 {
-		return shim.Error("Incorrect number of arguments. Expecting 5")
+		return shim.Error([]byte("Incorrect number of arguments. Expecting 4"))
 	}
 
 	var pig = Pig{PigId: args[0], Company: args[1], ActionName: args[2], Timestamp: args[3]}
