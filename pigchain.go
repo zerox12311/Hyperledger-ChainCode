@@ -92,30 +92,30 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 func (s *SmartContract) queryPig(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	if len(args) != 1 {
-		return shim.Error("Incorrect number of arguments. Expecting 1")
+		return shim.Success([]byte("Incorrect number of arguments. Expecting 1"))
 	}
 
 	pigAsBytes, _ := APIstub.GetState(args[0])
 	if pigAsBytes == nil {
-		return shim.Error("Could not locate pig")
+		return shim.Success([]byte("Could not locate pig"))
 	}
 	return shim.Success(pigAsBytes)
 }
 
 func (s *SmartContract) queryPigHistory(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 	if len(args) != 1 {
-		return shim.Error("Incorrect number of arguments. Expecting 1")
+		return shim.Success([]byte("Incorrect number of arguments. Expecting 1"))
 	}
 
 	pigAsBytes, err := APIstub.GetHistoryForKey(args[0])
 	if err != nil {
 		fmt.Errorf("Failed to get asset: %s with error: %s", args[0], err)
-		return shim.Error("Failed to get asset")
+		return shim.Success([]byte("Failed to get asset"))
 	}
 
 	if pigAsBytes == nil {
 		fmt.Errorf("Could not locate pig")
-		return shim.Error("Could not locate pig")
+		return shim.Success([]byte("Could not locate pig"))
 	}
 	defer pigAsBytes.Close()
 
@@ -167,7 +167,7 @@ func (s *SmartContract) queryPigHistory(APIstub shim.ChaincodeStubInterface, arg
 func (s *SmartContract) recordPig(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	if len(args) != 4 {
-		return shim.Error("Incorrect number of arguments. Expecting 4")
+		return shim.Error([]byte("Incorrect number of arguments. Expecting 4"))
 	}
 
 	var pig = Pig{PigId: args[0], Company: args[1], ActionName: args[2], Timestamp: args[3]}
@@ -175,7 +175,7 @@ func (s *SmartContract) recordPig(APIstub shim.ChaincodeStubInterface, args []st
 	pigAsBytes, _ := json.Marshal(pig)
 	err := APIstub.PutState(args[0], pigAsBytes)
 	if err != nil {
-		return shim.Error("Failed to record pig catch:" + args[0])
+		return shim.Success([]byte("Failed to record pig catch:" + args[0]))
 	}
 
 	return shim.Success([]byte("Add Success"))
