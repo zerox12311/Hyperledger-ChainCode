@@ -175,10 +175,10 @@ func (s *SmartContract) recordPig(APIstub shim.ChaincodeStubInterface, args []st
 	pigAsBytes, _ := json.Marshal(pig)
 	err := APIstub.PutState(args[0], pigAsBytes)
 	if err != nil {
-		return shim.Error(fmt.Sprintf("Failed to record pig catch: %s", args[0]))
+		return shim.Error([]byte("Failed to record pig catch:" + args[0]))
 	}
 
-	return shim.Success(nil)
+	return shim.Success([]byte("Add Success"))
 }
 
 // 主程序
