@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -66,6 +67,20 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
  * The initLedger method *
  */
 func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
+	pig := []Pig{
+		Pig{PigId: "A", Timestamp: "2018-10-25", Company: "LUX", ActionName: "FEED"},
+		Pig{PigId: "B", Timestamp: "2018-10-26", Company: "NTUB", ActionName: "PLAY"},
+		Pig{PigId: "C", Timestamp: "2018-10-27", Company: "TEST", ActionName: "SHOW"},
+	}
+
+	i := 0
+	for i < len(pig) {
+		fmt.Println("i is ", i)
+		pigAsBytes, _ := json.Marshal(pig[i])
+		APIstub.PutState(strconv.Itoa(i+1), pigAsBytes)
+		fmt.Println("Added", pig[i])
+		i = i + 1
+	}
 
 	return shim.Success(nil)
 }
